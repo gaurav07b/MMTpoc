@@ -6,7 +6,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mmt.dao.entity.SignUp;
@@ -14,36 +13,33 @@ import com.mmt.dao.repository.SignUpRepo;
 
 import java.util.*;
 
-
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService {
-	
+
 	@Autowired
 	private SignUpRepo signRepo;
-	
+
 	Logger logger;
 
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		SignUp user = signRepo.findByEmailID(email);
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		SignUp user = signRepo.findByEmailID(username);
 		try {
-			if(user == null){
-				throw new UsernameNotFoundException("Invalid username or password.");
+			if (user == null) {
+				throw new UsernameNotFoundException("Invalid email or password.");
 			}
-				
+
 		} catch (UsernameNotFoundException e) {
 			logger.error(e.getLocalizedMessage());
 			return null;
 		}
-		return new org.springframework.security.core.userdetails.User(user.getEmailID(), user.getPwd(), getAuthority(user));
+		return new org.springframework.security.core.userdetails.User(user.getEmailID(), user.getPwd(),
+				getAuthority(user));
 	}
-	
+
 	private Set<SimpleGrantedAuthority> getAuthority(SignUp user) {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-		user.getRoles().forEach(role -> 
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()))
-		);
+		Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+		user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
 		return authorities;
 	}
-	
 
 }
