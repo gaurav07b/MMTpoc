@@ -11,5 +11,7 @@ import com.mmt.dao.entity.Role;
 @Repository("roleRepo")
 @Transactional
 public interface RoleRepo extends JpaRepository<Role, Long>{
+	
+	Role findByName(String name);
 
 }

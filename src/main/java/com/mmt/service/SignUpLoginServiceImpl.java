@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.jayway.jsonpath.internal.function.text.Length;
 import com.mmt.dao.entity.Role;
 import com.mmt.dao.entity.SignUp;
 import com.mmt.dao.repository.RoleRepo;
@@ -29,7 +28,7 @@ public class SignUpLoginServiceImpl implements ISignUpLogInService {
 	@Override
 	public void newUserCustomSignUp(SignUpDto signUpDto) {
 
-
+		if (roleRepo.count() == 0) {
 			Role adminRole = new Role();
 			adminRole.setName("ADMIN");
 			Set<Role> forAdmin = new HashSet<>();
@@ -64,13 +63,38 @@ public class SignUpLoginServiceImpl implements ISignUpLogInService {
 			signRepo.save(signUpEnt);
 		}
 
-		
+		else {
+
+			SignUp signUpEnt = new SignUp();
+			signUpEnt.setfName(signUpDto.getfName());
+			signUpEnt.setlName(signUpDto.getlName());
+			signUpEnt.setEmailID(signUpDto.getEmailID());
+			signUpEnt.setPwd(bcryptEncoder.encode(signUpDto.getPwd()));
+			List<SignUp> allSignedUp = signRepo.findAll();
+			int totalPwds = 0;
+			for (SignUp signUp : allSignedUp) {
+				String pwds = signUp.getPwd();
+				if (pwds != null)
+					totalPwds += 1;
+			}
+			if (totalPwds == 0) {
+				Set<Role> byNameAdmin = new HashSet<>();
+				byNameAdmin.add(roleRepo.findByName("ADMIN"));
+				signUpEnt.setRoles(byNameAdmin);
+			} else {
+				Set<Role> byNameUser = new HashSet<>();
+				byNameUser.add(roleRepo.findByName("USER"));
+				signUpEnt.setRoles(byNameUser);
+			}
+
+			signRepo.save(signUpEnt);
+		}
 
 	}
 
-	// @Override
-	// public void newUserGoogleSignUp(SignUpDto gSignUp) {
-	// return ;
-	// }
+}
 
-
+// @Override
+// public void newUserGoogleSignUp(SignUpDto gSignUp) {
+// return ;
+// }
