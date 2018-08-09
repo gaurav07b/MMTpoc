@@ -5,7 +5,7 @@
 
 	<groupId>com.poc</groupId>
 	<artifactId>MakeMyTripAPIs</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>war</packaging>
 
 	<name>MakeMyTripAPIs</name>
@@ -103,6 +103,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>MakeMyTrip</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -110,6 +111,20 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>deployment</id>
+			<name>Internal Release</name>
+			<url>http://52.87.246.206:8080/repository/mmt/</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>deployment</id>
+			<name>Internal Release</name>
+			<url>http://52.87.246.206:8080/repository/mmt_sanp/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 
 </project>
