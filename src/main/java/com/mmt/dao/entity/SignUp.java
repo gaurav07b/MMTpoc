@@ -14,7 +14,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-//import javax.validation.constraints.Size;
 
 @Entity
 @Table
@@ -22,7 +21,7 @@ public class SignUp {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private long id;
 
 	@Column(name = "firstname")
 	private String fName;
@@ -32,11 +31,10 @@ public class SignUp {
 
 	@Email
 	@Column(name = "email", unique = true)
-	private String emailID;
+	private String username;
 
 	@Column(name = "password")
-//	@Size(min = 8, max = 20)
-	private String pwd;
+	private String password;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "USER_ROLES", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
@@ -50,11 +48,11 @@ public class SignUp {
 		super();
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -74,20 +72,20 @@ public class SignUp {
 		this.lName = lName;
 	}
 
-	public String getEmailID() {
-		return emailID;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setEmailID(String emailID) {
-		this.emailID = emailID;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public String getPwd() {
-		return pwd;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public Set<Role> getRoles() {

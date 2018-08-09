@@ -45,12 +45,12 @@ public class SignUpLoginServiceImpl implements ISignUpLogInService {
 			SignUp signUpEnt = new SignUp();
 			signUpEnt.setfName(signUpDto.getfName());
 			signUpEnt.setlName(signUpDto.getlName());
-			signUpEnt.setEmailID(signUpDto.getEmailID());
-			signUpEnt.setPwd(bcryptEncoder.encode(signUpDto.getPwd()));
+			signUpEnt.setUsername(signUpDto.getUsername());
+			signUpEnt.setPassword(bcryptEncoder.encode(signUpDto.getPassword()));
 			List<SignUp> allSignedUp = signRepo.findAll();
 			int totalPwds = 0;
 			for (SignUp signUp : allSignedUp) {
-				String pwds = signUp.getPwd();
+				String pwds = signUp.getPassword();
 				if (pwds != null)
 					totalPwds += 1;
 			}
@@ -68,12 +68,12 @@ public class SignUpLoginServiceImpl implements ISignUpLogInService {
 			SignUp signUpEnt = new SignUp();
 			signUpEnt.setfName(signUpDto.getfName());
 			signUpEnt.setlName(signUpDto.getlName());
-			signUpEnt.setEmailID(signUpDto.getEmailID());
-			signUpEnt.setPwd(bcryptEncoder.encode(signUpDto.getPwd()));
+			signUpEnt.setUsername(signUpDto.getUsername());
+			signUpEnt.setPassword(bcryptEncoder.encode(signUpDto.getPassword()));
 			List<SignUp> allSignedUp = signRepo.findAll();
 			int totalPwds = 0;
 			for (SignUp signUp : allSignedUp) {
-				String pwds = signUp.getPwd();
+				String pwds = signUp.getPassword();
 				if (pwds != null)
 					totalPwds += 1;
 			}

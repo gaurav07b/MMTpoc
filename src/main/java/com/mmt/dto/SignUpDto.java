@@ -15,10 +15,10 @@ public class SignUpDto {
 	private String lName;
 
 	@Email
-	private String emailID;
+	private String username;
 
 	@Size(min = 8, max = 20)
-	private String pwd;
+	private String password;
 
 	private String role;
 
@@ -52,20 +52,20 @@ public class SignUpDto {
 		this.lName = lName;
 	}
 
-	public String getEmailID() {
-		return emailID;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setEmailID(String emailID) {
-		this.emailID = emailID;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public String getPwd() {
-		return pwd;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getRole() {

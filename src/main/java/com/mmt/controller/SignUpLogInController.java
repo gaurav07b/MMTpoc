@@ -2,12 +2,16 @@ package com.mmt.controller;
 
 import static com.mmt.model.security.Constants.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +29,7 @@ import com.mmt.dto.SignUpDto;
 import com.mmt.model.security.AuthToken;
 import com.mmt.model.security.Constants;
 import com.mmt.model.security.LoginUser;
+import com.mmt.response.ResponseData;
 import com.mmt.service.ISignUpLogInService;
 
 @RestController("controlSignUp")
@@ -45,13 +50,16 @@ public class SignUpLogInController{
     
 	
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public void saveUser(@RequestBody SignUpDto signingUp) {
-
+	public Map<String, String> saveUser(@Valid @RequestBody SignUpDto signingUp) {
+		Map<String, String> map = new HashMap<>();
 		signUpServ.newUserCustomSignUp(signingUp);
+		map.put("Message", "SignUp Successful !!");
+		return map;
 	}
 	
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> register(@RequestBody LoginUser loginUser) throws AuthenticationException {
+//    public ResponseEntity<?> register(@Valid @RequestBody LoginUser loginUser) throws AuthenticationException {
+    public ResponseData register(@Valid @RequestBody LoginUser loginUser) throws AuthenticationException {
 
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -63,7 +71,9 @@ public class SignUpLogInController{
         final String token = jwtTokenUtil.generateToken(authentication);
         redisTemplate.opsForValue().set(loginUser.getUsername(),token);
         redisTemplate.expire(loginUser.getUsername(), Constants.ACCESS_TOKEN_VALIDITY_SECONDS, TimeUnit.SECONDS);
-        return ResponseEntity.ok(new AuthToken(token));
+        AuthToken auth = new AuthToken(token);
+        ResponseEntity.ok(auth);
+        return new ResponseData(HttpStatus.CREATED.toString(), "Login Successful!!", null ,auth.getToken());
     }
     
     @DeleteMapping("/logout")

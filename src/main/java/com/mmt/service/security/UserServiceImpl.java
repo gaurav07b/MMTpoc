@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserDetailsService {
 	Logger logger;
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		SignUp user = signRepo.findByEmailID(username);
+		SignUp user = signRepo.findByUsername(username);
 		try {
 			if (user == null) {
 				throw new UsernameNotFoundException("Invalid email or password.");
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserDetailsService {
 			logger.error(e.getLocalizedMessage());
 			return null;
 		}
-		return new org.springframework.security.core.userdetails.User(user.getEmailID(), user.getPwd(),
+		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				getAuthority(user));
 	}
 
