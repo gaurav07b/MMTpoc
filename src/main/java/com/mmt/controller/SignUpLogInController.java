@@ -34,52 +34,49 @@ import com.mmt.service.ISignUpLogInService;
 
 @RestController("controlSignUp")
 @RequestMapping("/mmt/authentication")
-public class SignUpLogInController{
-	
+public class SignUpLogInController {
+
 	@Autowired
 	private ISignUpLogInService signUpServ;
-	
-	@Autowired
-    private RedisTemplate<String,String> redisTemplate;
-	
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private TokenProvider jwtTokenUtil;
-    
-	
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private TokenProvider jwtTokenUtil;
+
+	String msg = "Message";
+
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public Map<String, String> saveUser(@Valid @RequestBody SignUpDto signingUp) {
 		Map<String, String> map = new HashMap<>();
 		signUpServ.newUserCustomSignUp(signingUp);
-		map.put("Message", "SignUp Successful !!");
-		return map;
+			map.put(msg, "SignUp Successful !!");
+			map.put("Code", HttpStatus.OK.toString());
+			return map;
 	}
-	
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    public ResponseEntity<?> register(@Valid @RequestBody LoginUser loginUser) throws AuthenticationException {
-    public ResponseData register(@Valid @RequestBody LoginUser loginUser) throws AuthenticationException {
 
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginUser.getUsername(),
-                        loginUser.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = jwtTokenUtil.generateToken(authentication);
-        redisTemplate.opsForValue().set(loginUser.getUsername(),token);
-        redisTemplate.expire(loginUser.getUsername(), Constants.ACCESS_TOKEN_VALIDITY_SECONDS, TimeUnit.SECONDS);
-        AuthToken auth = new AuthToken(token);
-        ResponseEntity.ok(auth);
-        return new ResponseData(HttpStatus.CREATED.toString(), "Login Successful!!", null ,auth.getToken());
-    }
-    
-    @DeleteMapping("/logout")
-    public void logOutUser(HttpServletRequest req) {
-    	String token = req.getHeader(HEADER_STRING).replace(TOKEN_PREFIX,"");
-    	redisTemplate.opsForValue().getOperations().delete(jwtTokenUtil.getUsernameFromToken(token));
-    	
-    }
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	// public ResponseEntity<?> register(@Valid @RequestBody LoginUser loginUser) throws AuthenticationException {
+	public ResponseData register(@Valid @RequestBody LoginUser loginUser) throws AuthenticationException {
+
+		final Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		final String token = jwtTokenUtil.generateToken(authentication);
+		redisTemplate.opsForValue().set(loginUser.getUsername(), token);
+		redisTemplate.expire(loginUser.getUsername(), Constants.ACCESS_TOKEN_VALIDITY_SECONDS, TimeUnit.SECONDS);
+		AuthToken auth = new AuthToken(token);
+		ResponseEntity.ok(auth);
+		return new ResponseData(HttpStatus.CREATED.toString(), "Login Successful!!", null, auth.getToken());
+	}
+
+	@DeleteMapping("/logout")
+	public void logOutUser(HttpServletRequest req) {
+		String token = req.getHeader(HEADER_STRING).replace(TOKEN_PREFIX, "");
+		redisTemplate.opsForValue().getOperations().delete(jwtTokenUtil.getUsernameFromToken(token));
+	}
 }
