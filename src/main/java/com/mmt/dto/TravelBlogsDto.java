@@ -1,13 +1,18 @@
 package com.mmt.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class TravelBlogsDto {
 
 		private long id;
-		
+
+		@NotNull
 		private String blogName;
-		
+
+		@NotNull
 		private String imgURL;
-		
+
+		@NotNull
 		private String blogURL;
 
 		public TravelBlogsDto() {

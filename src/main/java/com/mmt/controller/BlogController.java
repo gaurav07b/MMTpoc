@@ -1,5 +1,7 @@
 package com.mmt.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +26,12 @@ public class BlogController {
 	@RequestMapping(value = "/writeNew", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public void addBlog(@RequestBody TravelBlogsDto tBlogDto) {
 		blogImpl.addNewBlogs(tBlogDto);
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = "/seeAllBlogs", method = RequestMethod.GET)
+	public List<TravelBlogsDto> seeAllBlogDetails() {
+		return blogImpl.allBlogInfo();
 	}
 
 	@RequestMapping(value = "/open_blog/{id}", method = RequestMethod.GET)

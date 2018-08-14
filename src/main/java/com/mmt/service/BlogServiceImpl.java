@@ -1,5 +1,7 @@
 package com.mmt.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ public class BlogServiceImpl implements IBlogService{
 		TravelBlogs blogEnt;
 		blogEnt = blogRepo.findById(blogId);
 		TravelBlogsDto blogDto = new TravelBlogsDto();
+		blogDto.setId(blogEnt.getId());
 		blogDto.setBlogName(blogEnt.getBlogName());
 		blogDto.setImgURL(blogEnt.getImgURL());
 		blogDto.setBlogURL(blogEnt.getBlogURL());
@@ -43,6 +46,26 @@ public class BlogServiceImpl implements IBlogService{
 	@Override
 	public void removeBlogs(long blogId) {
 		blogRepo.deleteById(blogId);
+	}
+
+	@Override
+	public List<TravelBlogsDto> allBlogInfo() {
+		List<TravelBlogs> blogEnt;
+		List<TravelBlogsDto> blogDto = new ArrayList<>();
+		blogEnt =  blogRepo.findAll();
+		for (TravelBlogs travelBlogsEnt : blogEnt) {
+			blogDto.add(assemblerBlog(travelBlogsEnt));
+		}
+		return blogDto;
+	}
+	
+	TravelBlogsDto assemblerBlog(TravelBlogs tBlogEnt) {
+		TravelBlogsDto tBlogDto = new TravelBlogsDto();
+		tBlogDto.setId(tBlogEnt.getId());
+		tBlogDto.setBlogName(tBlogEnt.getBlogName());
+		tBlogDto.setImgURL(tBlogEnt.getImgURL());
+		tBlogDto.setBlogURL(tBlogEnt.getBlogURL());
+		return tBlogDto;
 	}
 
 }
