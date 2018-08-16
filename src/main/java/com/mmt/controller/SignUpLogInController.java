@@ -55,9 +55,6 @@ public class SignUpLogInController {
 	@Autowired
 	private TokenProvider jwtTokenUtil;
 
-	@Autowired
-	private JavaMailSender sender;
-
 	String msg = "Message";
 
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
@@ -67,25 +64,6 @@ public class SignUpLogInController {
 
 		map.put(msg, "SignUp Successful !!");
 		map.put("Code", HttpStatus.OK.toString());
-		MimeMessage message = sender.createMimeMessage();
-
-		try {
-			MimeMessageHelper helper = new MimeMessageHelper(message, true);
-			helper.setTo(signingUp.getUsername());
-			helper.setText(
-					"<html><body>Hi User,</br>Welcome to MakeMyTrip<b>(duplicate)</b>!</br> We hope to make each of your journey memorable... </br>Kindly check the attachment for <b>Terms and Conditions<b></br></br>See you around</br>Team Duplicate<img src='cid:id101'/><body></html>",
-					true);
-			helper.setSubject("Welcome to MakeMyTrip");
-			ClassPathResource file1 = new ClassPathResource("mmt.jpg");
-			helper.addInline("id101", file1);
-			ClassPathResource file = new ClassPathResource("Terms and Conditions.pdf");
-			helper.addAttachment("Terms and Conditions.pdf", file);
-			sender.send(message);
-		} catch (MailException e) {
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
 		return map;
 	}
 
