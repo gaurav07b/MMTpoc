@@ -1,5 +1,7 @@
 package com.mmt.service;
 
+import org.springframework.http.HttpStatus;
+
 import com.mmt.dto.SignUpDto;
 
 public interface ISignUpLogInService {
