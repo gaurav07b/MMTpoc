@@ -28,7 +28,7 @@ public class BlogController {
 		blogImpl.addNewBlogs(tBlogDto);
 	}
 	
-	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/seeAllBlogs", method = RequestMethod.GET)
 	public List<TravelBlogsDto> seeAllBlogDetails() {
 		return blogImpl.allBlogInfo();
