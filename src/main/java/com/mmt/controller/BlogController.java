@@ -47,5 +47,5 @@ public class BlogController {
 	public void deleteBlog(@PathVariable(value = "id") long id) {
 		blogImpl.removeBlogs(id);
 	}
-
+	
 }

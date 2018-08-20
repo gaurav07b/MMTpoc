@@ -19,18 +19,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mmt.config.security.TokenProvider;
+import com.mmt.dao.entity.SignUp;
 import com.mmt.dto.SignUpDto;
 import com.mmt.model.security.AuthToken;
 import com.mmt.model.security.Constants;
@@ -54,7 +57,8 @@ public class SignUpLogInController {
 	@Autowired
 	private TokenProvider jwtTokenUtil;
 	
-
+	@Autowired
+	private JavaMailSender sender;
 
 	String msg = "Message";
 
@@ -92,4 +96,6 @@ public class SignUpLogInController {
 		String token = req.getHeader(HEADER_STRING).replace(TOKEN_PREFIX, "");
 		redisTemplate.opsForValue().getOperations().delete(jwtTokenUtil.getUsernameFromToken(token));
 	}
+	
+	
 }
